@@ -1,0 +1,75 @@
+Prepare
+Do the laptop steps the day before, so there is time to fix a problem. The laptop runs Windows.
+
+The week before
+Book a room and a Zoom call with cloud recording on. Make sure the second interviewer can open the recording.
+Send the candidate the email below. Do not send the zip. The candidate sees the project on the laptop at the start.
+The day before: the laptop
+You do a few steps by hand. Then Codex installs and checks everything else.
+
+Get the loaner laptop from IT. It is not on the Hudson Bay network. Make sure it starts and connects to the internet.
+Create an OpenAI key for this candidate. Name it with the candidate's initials and the date. The candidate and the coding agents use this key during the session.
+On your own computer, download candidate.zip from this site. The laptop cannot open this site. Copy the zip to the laptop's Downloads folder, for example with a USB drive.
+On the laptop, open PowerShell. Store the key for this Windows user, then close PowerShell:
+[Environment]::SetEnvironmentVariable("OPENAI_API_KEY", "paste-the-key-here", "User")
+Open a new PowerShell window. Install Codex, then close PowerShell:
+irm https://chatgpt.com/codex/install.ps1 | iex
+Open a new PowerShell window. Sign Codex in with the key and start it with permission to install software:
+$env:OPENAI_API_KEY | codex login --with-api-key
+mkdir C:\assessment; cd C:\assessment
+codex --sandbox danger-full-access --ask-for-approval on-request
+Paste the setup prompt into Codex. Approve its requests. At the end it prints a table; every row must say PASS.
+Setup prompt for Codex
+Copied
+Set up this Windows laptop for a one-hour coding interview. Use PowerShell.
+
+Rules:
+- The OpenAI API key is in the user environment variable OPENAI_API_KEY. Never print, log or echo the key.
+- After each install, reload PATH from the machine and user environment before the next step.
+- Check that each step worked. Fix a problem before you move on.
+- Do not sign in to any account.
+
+1. Install with winget, using --accept-source-agreements --accept-package-agreements:
+   Git (Git.Git), Node.js LTS (OpenJS.NodeJS.LTS), VS Code (Microsoft.VisualStudioCode),
+   Cursor (Anysphere.Cursor), Zoom (Zoom.Zoom).
+
+2. Install uv:
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+3. Install Claude Code: irm https://claude.ai/install.ps1 | iex
+   Do not sign in. The candidate uses their own account.
+
+4. Install three more coding agents. Set each one up to use OpenAI, with the key from
+   OPENAI_API_KEY and the model gpt-5.5:
+   - pi: npm install -g @earendil-works/pi-coding-agent
+     Write %USERPROFILE%\.pi\agent\settings.json:
+     {"defaultProvider": "openai", "defaultModel": "gpt-5.5"}
+   - OpenCode: npm install -g opencode-ai
+     Write %USERPROFILE%\.config\opencode\opencode.json:
+     {"$schema": "https://opencode.ai/config.json", "model": "openai/gpt-5.5"}
+     If OpenCode does not find the key, store it the way the OpenCode docs describe.
+   - Aider: uv tool install --python 3.12 aider-chat
+     Write %USERPROFILE%\.aider.conf.yml with the line: model: gpt-5.5
+
+5. Unzip %USERPROFILE%\Downloads\candidate.zip into C:\assessment.
+   In C:\assessment\starter:
+   - Copy .env.example to .env. Set OPENAI_API_KEY in .env to the value of the environment variable.
+   - uv sync
+   - uv run ingest.py   (expect: Indexed 5 files, 1377 chunks)
+   - uv run pytest      (expect: 9 passed)
+   - uv run ask.py "What success rate does Toolformer report on ALFWorld?"   (any answer is fine)
+
+6. In C:\assessment\starter, make the starting commit:
+   git config --global user.name "Candidate"
+   git config --global user.email "candidate@example.com"
+   git init, git add -A, git commit -m "starter"
+   Check that .env is not in the commit.
+
+7. Test each OpenAI agent from C:\assessment\starter with this question, without changing any file:
+   "How many passages does search_documents return, and where is that set?"
+   The right answer is 3, set by TOP_K in app/config.py.
+   Use: codex exec, pi -p, opencode run, and aider --chat-mode ask --message.
+
+8. Finish with a table: each tool, its version, and PASS or FAIL.
+   Include Git, Node.js, uv, VS Code, Cursor, Zoom and Claude Code (installed only).
+   For each FAIL, say what you tried.
