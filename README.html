@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Coding Assessment: Paper Chat</title>
+<style>
+  body { font: 15px/1.55 -apple-system, "Segoe UI", system-ui, sans-serif; color: #1f2328; max-width: 860px; margin: 0 auto; padding: 32px 24px 64px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  h2 { font-size: 19px; margin: 32px 0 8px; border-bottom: 1px solid #d8dee4; padding-bottom: 4px; }
+  p { margin: 8px 0; }
+  .lead { color: #59636e; margin-bottom: 20px; }
+  code { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; background: #f2f4f6; padding: 1px 5px; border-radius: 4px; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 14px; }
+  th, td { border: 1px solid #d8dee4; padding: 7px 9px; text-align: left; vertical-align: top; }
+  th { background: #f6f8fa; }
+  td.today { background: #fff1f0; }
+  td.good { background: #effaf1; }
+  .src { display: block; color: #59636e; font-size: 13px; margin-top: 3px; }
+  ul { margin: 6px 0; padding-left: 22px; }
+  li { margin: 3px 0; }
+  .diagram { margin: 14px 0 6px; }
+  .diagram svg { width: 100%; height: auto; display: block; }
+</style>
+</head>
+<body>
+
+<h1>Coding Assessment: Paper Chat</h1>
+<p class="lead">Applied AI team, Hudson Bay Capital. Take about 10 minutes to read this page and look through the code before you start.</p>
+
+<h2>The project</h2>
+<p><code>starter/</code> is a small chat bot that answers questions about five research papers on AI agents.
+A script reads the PDFs, cuts the text into short passages and stores them in a search index.
+When you ask a question, an agent searches the index and writes an answer from the passages it gets back.
+You can also upload more PDFs from the chat page.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 780 380" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <marker id="b-blue" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7.2" markerHeight="7.2" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f6feb"/></marker>
+    <marker id="b-green" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7.2" markerHeight="7.2" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/></marker>
+    <marker id="b-gray" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7.2" markerHeight="7.2" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#818b98"/></marker>
+  </defs>
+  <style>
+    .box { fill: #fff; stroke: #57606a; stroke-width: 1.25; }
+    .t { font-size: 13px; font-weight: 600; fill: #1f2328; }
+    .s { font-size: 11.5px; fill: #59636e; }
+    .m { font-size: 11px; fill: #59636e; font-family: ui-monospace, Menlo, monospace; }
+    .lbl { font-size: 11px; fill: #59636e; }
+    .blue { stroke: #1f6feb; stroke-width: 1.25; fill: none; marker-end: url(#b-blue); }
+    .green { stroke: #1a7f37; stroke-width: 1.25; fill: none; marker-end: url(#b-green); }
+    .gray { stroke: #818b98; stroke-width: 1.25; fill: none; stroke-dasharray: 5 4; marker-end: url(#b-gray); }
+  </style>
+
+  <!-- build row -->
+  <rect class="box" x="30" y="30" width="180" height="62"/>
+  <text class="t" x="44" y="54">PDF papers</text>
+  <text class="m" x="44" y="74">docs/papers/</text>
+
+  <rect class="box" x="300" y="30" width="180" height="62"/>
+  <text class="t" x="314" y="54">ingest.py</text>
+  <text class="s" x="314" y="72">reads PDFs, cuts text</text>
+  <text class="s" x="314" y="86">into passages</text>
+
+  <rect class="box" x="570" y="30" width="180" height="62"/>
+  <text class="t" x="584" y="54">Search index</text>
+  <text class="m" x="584" y="74">data/index/</text>
+
+  <!-- request row -->
+  <rect class="box" x="30" y="210" width="180" height="62"/>
+  <text class="t" x="44" y="234">Chat page or ask.py</text>
+  <text class="m" x="44" y="254">static/index.html</text>
+
+  <rect class="box" x="300" y="210" width="180" height="62"/>
+  <text class="t" x="314" y="234">Agent</text>
+  <text class="s" x="314" y="252">OpenAI model and</text>
+  <text class="s" x="314" y="266">instructions</text>
+
+  <rect class="box" x="570" y="210" width="180" height="62"/>
+  <text class="t" x="584" y="234">search_documents tool</text>
+  <text class="m" x="584" y="254">app/retrieval.py</text>
+
+  <!-- build arrows -->
+  <path class="gray" d="M210,61 H300"/>
+  <path class="gray" d="M480,61 H570"/>
+  <path class="gray" d="M120,210 V150 H390 V92"/>
+  <text class="lbl" x="134" y="142">upload a PDF</text>
+
+  <!-- request arrows -->
+  <path class="blue" d="M210,230 H300"/>
+  <text class="lbl" x="226" y="222">question</text>
+  <path class="green" d="M300,256 H210"/>
+  <text class="lbl" x="232" y="290">answer</text>
+
+  <path class="blue" d="M480,230 H570"/>
+  <text class="lbl" x="502" y="222">query</text>
+  <path class="green" d="M570,256 H480"/>
+  <text class="lbl" x="494" y="290">passages</text>
+
+  <path class="blue" d="M640,210 V92"/>
+  <path class="green" d="M690,92 V210"/>
+
+  <!-- legend -->
+  <rect x="560" y="312" width="200" height="60" fill="#fff" stroke="#1f2328" stroke-width="1"/>
+  <rect x="560" y="312" width="200" height="16" fill="#1f2328"/>
+  <text x="568" y="324" font-size="10.5" font-weight="600" fill="#fff">Legend</text>
+  <line x1="570" y1="341" x2="600" y2="341" stroke="#1f6feb" stroke-width="1.25"/>
+  <text class="lbl" x="608" y="345">request</text>
+  <line x1="660" y1="341" x2="690" y2="341" stroke="#1a7f37" stroke-width="1.25"/>
+  <text class="lbl" x="698" y="345">data back</text>
+  <line x1="570" y1="359" x2="600" y2="359" stroke="#818b98" stroke-width="1.25" stroke-dasharray="5 4"/>
+  <text class="lbl" x="608" y="363">building the index</text>
+</svg>
+</div>
+
+<h2>The session</h2>
+<ul>
+  <li>One hour, in our office, on a laptop we provide, with the project set up. We give you an OpenAI key; it is already in <code>starter/.env</code>.
+      The Claude Code and Codex command-line tools, VS Code and Cursor are installed. Sign in with your own Claude, ChatGPT or Cursor account, and use a coding agent the way you normally work.</li>
+  <li>You share the screen on a Zoom call. We record it so a second interviewer can review it.</li>
+  <li>Think out loud and commit as you go. In the last 5 minutes, tell us what you found, what you changed, how you measured it, and what you would do next.</li>
+  <li>We do not expect you to finish. How you find the problem and what you choose to do matters more than how many questions you fix.</li>
+</ul>
+
+<h2>Commands</h2>
+<p>Run these in PowerShell, in <code>starter/</code>.</p>
+<table>
+  <tr><th>What</th><th>Command</th></tr>
+  <tr><td>Chat page</td><td><code>uv run uvicorn app.server:app</code>, then open <code>http://localhost:8000</code></td></tr>
+  <tr><td>Ask one question</td><td><code>uv run ask.py "your question"</code></td></tr>
+  <tr><td>Rebuild the index</td><td><code>uv run ingest.py</code></td></tr>
+  <tr><td>Tests (no key needed, they pass today)</td><td><code>uv run pytest</code></td></tr>
+</table>
+
+<h2>Task 1: the answers are not good</h2>
+<p>People who tried the bot say its answers are often wrong, incomplete or made up.
+Here are six questions they asked. The bot gets them wrong most of the time.
+Its answers change from run to run. The answers below are real answers from the bot as you get it.</p>
+<table>
+  <tr><th style="width:4%">#</th><th style="width:34%">Question</th><th style="width:28%">The bot today</th><th style="width:34%">A good answer</th></tr>
+  <tr><td>1</td><td>What share of ReAct's failed HotpotQA cases were search result errors?</td>
+      <td class="today">About 56% of ReAct’s failed HotpotQA cases were search result errors.</td>
+      <td class="good">23%.<span class="src">react.pdf, page 6</span></td></tr>
+  <tr><td>2</td><td>In the generative agents interview evaluation, which conditions were compared?</td>
+      <td class="today">They compared the full generative agent, three ablations removing memory types (no observation, no reflection, no planning), and a human crowdworker-authored condition.</td>
+      <td class="good">Five: the full agent; no observation, reflection or planning; no reflection or planning; no reflection; and human crowdworkers.<span class="src">generative-agents.pdf, page 13</span></td></tr>
+  <tr><td>3</td><td>Which model powers Toolformer's question answering tool, and what was it fine-tuned on?</td>
+      <td class="today">Toolformer’s question-answering tool is a Wikipedia search tool, and it was fine-tuned on GPT-J.</td>
+      <td class="good">Atlas, fine-tuned on Natural Questions.<span class="src">toolformer.pdf, page 4</span></td></tr>
+  <tr><td>4</td><td>ReAct and Reflexion both test on ALFWorld. What success does each paper report for its own method?</td>
+      <td class="today">On ALFWorld, ReAct reports about 34% success for its own method, while Reflexion reports 71% success for its own method.</td>
+      <td class="good">ReAct: 71% for its best trial. Reflexion: 130 of 134 tasks.<span class="src">react.pdf, page 8; reflexion.pdf, page 5</span></td></tr>
+  <tr><td>5</td><td>Which paper builds a self-consistency baseline by sampling 21 chain-of-thought trajectories?</td>
+      <td class="today">It’s Wang et al., 2022a/b: “Self-consistency improves chain of thought reasoning in language models.”</td>
+      <td class="good">The ReAct paper.<span class="src">react.pdf, page 5</span></td></tr>
+  <tr><td>6</td><td>What success rate does Toolformer report on ALFWorld?</td>
+      <td class="today">Toolformer reports a 22% improvement over baselines on ALFWorld.</td>
+      <td class="good">The papers do not cover this.</td></tr>
+</table>
+<p>Find out why, and make the answers better. You decide what to change. You do not need to fix all six.
+Show us how you know the answers got better, not only that they look better.</p>
+<p>Keep the same five papers and the same chat model. Free, open-source Python packages are fine; paid services are not.</p>
+
+<h2>Task 2: say where the answer came from</h2>
+<p>After each answer, show the file name and page number of each passage the answer used.
+The grey lines under the good answers above show the format.</p>
+
+</body>
+</html>

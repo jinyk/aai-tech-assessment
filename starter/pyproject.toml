@@ -1,0 +1,31 @@
+[project]
+name = "paper-chat"
+version = "0.1.0"
+description = "A small chat bot that answers questions about PDF documents."
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "deepagents",
+    "langchain",
+    "langchain-community",
+    "langchain-openai",
+    "faiss-cpu",
+    "pypdf",
+    "fastapi",
+    "uvicorn",
+    "python-multipart",
+    "python-dotenv",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "httpx",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = ["ignore:`langchain-community` is being sunset:DeprecationWarning"]
